@@ -24,13 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.sirteefyapps.funquizes.features.quiz.presentation.widgets.CustomButton
 import com.sirteefyapps.funquizes.ui.theme.AppColors
 import com.sirteefyapps.funquizes.ui.theme.Typography
 
-@Preview(showBackground = true)
 @Composable
-fun QuizScreen() {
+fun QuizScreen(navController: NavController) {
     Surface(modifier = Modifier.fillMaxSize(), color = AppColors.darkPurple) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Row (
