@@ -61,12 +61,16 @@ dependencies {
     implementation(libs.androidx.room.guava)
     testImplementation(libs.androidx.room.testing)
     implementation(libs.retrofit)
+    implementation (libs.retrofit.v202)
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
 
     // Gson
     implementation(libs.gson)
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation(libs.kotlinx.coroutines.android)
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

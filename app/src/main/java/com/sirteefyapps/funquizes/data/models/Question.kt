@@ -1,4 +1,4 @@
-package com.sirteefyapps.funquizes.features.quiz.data.models
+package com.sirteefyapps.funquizes.data.models
 
 data class Question(
     val category: String = "", // Entertainment: Film
