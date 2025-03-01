@@ -105,7 +105,7 @@ fun ConfigureQuizScreen() {
               Spacer(
                   modifier = Modifier.height(50.dp)
               )
-              CustomButton(modifier = Modifier.align(Alignment.CenterHorizontally), buttonColor = AppColors.brown)
+              CustomButton(modifier = Modifier.align(Alignment.CenterHorizontally), buttonColor = AppColors.brown, onClick = {}, text = "Start Quiz")
           }
         }
 }

@@ -13,6 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sirteefyapps.funquizes.features.quiz.presentation.widgets.CustomButton
 import com.sirteefyapps.funquizes.ui.theme.AppColors
 import com.sirteefyapps.funquizes.ui.theme.Typography
 
@@ -31,9 +36,16 @@ fun QuizScreen() {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Row (
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ){
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back",
+                    tint = AppColors.white
+                )
+                Spacer(
+                    modifier = Modifier.width(10.dp)
+                )
                 Text(
                     text = "Configure Quiz",
                     style = Typography.headlineMedium,
@@ -52,25 +64,36 @@ fun QuizScreen() {
 
                )
            }
-            OptionComposable(
-                selected = true,
-                text = "Maybe"
-            )
+          Column {
+              OptionComposable(
+                  selected = true,
+                  text = "Maybe"
+              )
+              Spacer(
+                  modifier = Modifier.height(10.dp)
+              )
+              OptionComposable(
+                  text = "Read Quran",
+                  onClick = {}
+                  , selected = false
+              )
+              Spacer(
+                  modifier = Modifier.height(10.dp)
+              )
+              OptionComposable(
+                  text = "Pray",
+                  onClick = {}
+                  , selected = false
+              )
+          }
             Spacer(
-                modifier = Modifier.height(10.dp)
+                modifier = Modifier.height(20.dp)
             )
-            OptionComposable(
-                text = "Read Quran",
-                onClick = {}
-                , selected = false
-            )
-            Spacer(
-                modifier = Modifier.height(10.dp)
-            )
-            OptionComposable(
-                text = "Pray",
-                onClick = {}
-                , selected = false
+            CustomButton(
+               buttonColor = AppColors.brown,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onClick = {},
+                text = "Check Answer"
             )
         }
     }

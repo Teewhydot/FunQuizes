@@ -11,9 +11,11 @@ import com.sirteefyapps.funquizes.ui.theme.Typography
 
 
 @Composable
-fun CustomButton(modifier: Modifier, buttonColor: Color) {
+fun CustomButton(modifier: Modifier, buttonColor: Color, onClick: () -> Unit, text: String) {
     ElevatedButton(
-        onClick = { }, colors = ButtonColors(
+        onClick = {
+            onClick()
+        }, colors = ButtonColors(
             containerColor = buttonColor,
             contentColor = AppColors.white,
             disabledContentColor = AppColors.white,
@@ -21,7 +23,7 @@ fun CustomButton(modifier: Modifier, buttonColor: Color) {
         ), modifier = modifier
     ) {
         Text(
-            text = "Start Quiz",
+            text = text,
             style = Typography.bodyMedium,
             color = AppColors.white,
         )
