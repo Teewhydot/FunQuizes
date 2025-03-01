@@ -5,15 +5,16 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.sirteefyapps.funquizes.ui.theme.AppColors
 import com.sirteefyapps.funquizes.ui.theme.Typography
 
 
 @Composable
-fun CustomButton(modifier: Modifier) {
+fun CustomButton(modifier: Modifier, buttonColor: Color) {
     ElevatedButton(
         onClick = { }, colors = ButtonColors(
-            containerColor = AppColors.brown,
+            containerColor = buttonColor,
             contentColor = AppColors.white,
             disabledContentColor = AppColors.white,
             disabledContainerColor = AppColors.brown,

@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,7 +57,7 @@ fun ConfigureQuizScreen() {
                   modifier = Modifier.height(20.dp)
               )
               Text(
-                  text = "Select the category",
+                  text = "Choose Quiz Category",
                   style = Typography.bodyMedium,
                   color = AppColors.white,
 
@@ -75,7 +73,7 @@ fun ConfigureQuizScreen() {
                 Spacer(
                     modifier = Modifier.height(20.dp))
               Text(
-                  text = "Select the difficulty",
+                  text = "Choose Difficulty",
                   style = Typography.bodyMedium,
                   color = AppColors.white,
 
@@ -91,7 +89,7 @@ fun ConfigureQuizScreen() {
               Spacer(
                   modifier = Modifier.height(20.dp))
               Text(
-                  text = "Select the difficulty",
+                  text = "Choose Quiz Mode",
                   style = Typography.bodyMedium,
                   color = AppColors.white,
 
@@ -107,7 +105,7 @@ fun ConfigureQuizScreen() {
               Spacer(
                   modifier = Modifier.height(50.dp)
               )
-              CustomButton(modifier = Modifier.align(Alignment.CenterHorizontally))
+              CustomButton(modifier = Modifier.align(Alignment.CenterHorizontally), buttonColor = AppColors.brown)
           }
         }
 }

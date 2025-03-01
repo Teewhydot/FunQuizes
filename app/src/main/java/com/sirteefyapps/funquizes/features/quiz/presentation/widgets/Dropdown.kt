@@ -1,6 +1,5 @@
 package com.sirteefyapps.funquizes.features.quiz.presentation.widgets
 
-
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sirteefyapps.funquizes.ui.theme.AppColors
 import com.sirteefyapps.funquizes.ui.theme.Typography
+import com.sirteefyapps.funquizes.utils.appendBooleanDescription
+import com.sirteefyapps.funquizes.utils.capitalizeFirstLetter
 
 @Composable
 fun DropdownButton(
@@ -38,7 +39,7 @@ fun DropdownButton(
         ),
             color = AppColors.lightPurple, shape = RoundedCornerShape(20.dp)) {
             Text(
-                text = selectedOption,
+                text = appendBooleanDescription(selectedOption).capitalizeFirstLetter(),
                 style = Typography.bodySmall.copy(
                     color = AppColors.white
                 ),
@@ -60,7 +61,7 @@ fun DropdownButton(
                         onOptionSelected(option)
                         expanded.value = false
                     },
-                    text = { Text(option) },
+                    text = { Text(option.capitalizeFirstLetter()) },
                 )
             }
         }
