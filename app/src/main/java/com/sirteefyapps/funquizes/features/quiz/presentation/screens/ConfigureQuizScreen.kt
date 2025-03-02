@@ -1,5 +1,6 @@
 package com.sirteefyapps.funquizes.features.quiz.presentation.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,14 +30,36 @@ import kotlinx.coroutines.launch
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun ConfigureQuizScreen(navController: NavController,) {
-    val selectCategoryOptions = listOf("General Knowledge", "Entertainment: Books", "Entertainment: Film","Entertainment: Music","Entertainment: Music",
-        "Entertainment: Musicals & Theatres","Entertainment: Television","Entertainment: Video Games","Entertainment: Board Games","Science & Nature",
-        "Science: Computers","Science: Mathematics","Mythology","Sports","Geography","History","Politics","Art","Celebrities","Animals","Vehicles","Entertainment: Comics",
-        "Science: Gadgets","Entertainment: Japanese Anime & Manga","Entertainment: Cartoon & Animations"
+    /// Selected category as a map where each category has a corresponding integer value
+    val pickCategoryOptions = mapOf(
+        "General Knowledge" to 9,
+        "Entertainment: Books" to 10,
+        "Entertainment: Film" to 11,
+        "Entertainment: Music" to 12,
+        "Entertainment: Musicals & Theatres" to 13,
+        "Entertainment: Television" to 14,
+        "Entertainment: Video Games" to 15,
+        "Entertainment: Board Games" to 16,
+        "Science & Nature" to 17,
+        "Science: Computers" to 18,
+        "Science: Mathematics" to 19,
+        "Mythology" to 20,
+        "Sports" to 21,
+        "Geography" to 22,
+        "History" to 23,
+        "Politics" to 24,
+        "Art" to 25,
+        "Celebrities" to 26,
+        "Animals" to 27,
+        "Vehicles" to 28,
+        "Entertainment: Comics" to 29,
+        "Science: Gadgets" to 30,
+        "Entertainment: Japanese Anime & Manga" to 31,
+        "Entertainment: Cartoon & Animations" to 32
     )
     val selectDifficultyOptions = listOf("easy", "medium", "hard")
     val selectQuizTypeOptions = listOf("multiple", "boolean")
-    val selectedCategoryOption = remember { mutableStateOf(selectCategoryOptions[0]) }
+    val selectedCategoryOption = remember { mutableStateOf(pickCategoryOptions.keys.first()) }
     val selectedDifficultyOption = remember { mutableStateOf(selectDifficultyOptions[0]) }
     val selectedQuizTypeOption = remember { mutableStateOf(selectQuizTypeOptions[0]) }
 //    val isLoading = funQuizViewModel.questionList.value.isLoading
@@ -73,7 +96,7 @@ fun ConfigureQuizScreen(navController: NavController,) {
                   modifier = Modifier.height(10.dp)
               )
                 DropdownButton(
-                    options = selectCategoryOptions,
+                    options = pickCategoryOptions.keys.toList(),
                     selectedOption = selectedCategoryOption.value,
                     onOptionSelected = { selectedCategoryOption.value = it }
                 )
@@ -113,7 +136,15 @@ fun ConfigureQuizScreen(navController: NavController,) {
               )
               CustomButton(modifier = Modifier.align(Alignment.CenterHorizontally), buttonColor = AppColors.brown, onClick = {
                   kotlinx.coroutines.GlobalScope.launch {
-                     val questions = KtorClient().getFunQuizQuestionsKtorClient()
+                      Log.d("Selected Category index", pickCategoryOptions[selectedCategoryOption.value]!!.toString())
+                     val questions = KtorClient().getFunQuizQuestionsKtorClient(
+                            amount = 10,
+                            category = pickCategoryOptions[selectedCategoryOption.value]!!,
+                            difficulty = selectedDifficultyOption.value,
+                            type = selectedQuizTypeOption.value
+                     )
+
+                      Log.d("Questions", questions.results.toString())
                   }
               }, text =  "Start Quiz"
               )

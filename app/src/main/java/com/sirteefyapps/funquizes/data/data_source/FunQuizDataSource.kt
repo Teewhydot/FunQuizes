@@ -46,9 +46,14 @@ class KtorClient {
             }
         }
     }
-    suspend fun getFunQuizQuestionsKtorClient(): QuizModel {
+    suspend fun getFunQuizQuestionsKtorClient(
+        amount: Int,
+        category: Int,
+        difficulty: String,
+        type: String
+    ): QuizModel {
         val result =  getClient().get(
-                "/api.php?amount=10&category=9&difficulty=easy&type=boolean").body<QuizModel>()
+                "/api.php?amount=$amount&category=$category&difficulty=$difficulty&type=$type").body<QuizModel>()
         return result
     }
 }
