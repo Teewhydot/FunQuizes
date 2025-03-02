@@ -1,3 +1,4 @@
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
@@ -18,8 +19,8 @@ fun FunQuizAppNavigation(){
         composable(AppScreens.CONFIGURE_QUIZ_SCREEN.name) {
             ConfigureQuizScreen(
                 navController = navController,
-                funQuizViewModel = null
-                )
+            )
+
         }
     composable(route =AppScreens.QUIZ_SCREEN.name) {
         QuizScreen(navController = navController)

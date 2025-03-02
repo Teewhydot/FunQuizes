@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id ("kotlin-kapt")
     id ("com.google.dagger.hilt.android")
-    id("com.google.devtools.ksp")
-
+    id ("com.google.devtools.ksp")
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -44,26 +44,34 @@ android {
 }
 
 dependencies {
+
+    implementation (libs.ktor.client.core)
+    implementation (libs.ktor.client.android)
+    implementation (libs.ktor.serialization.kotlinx.json)
+    implementation (libs.kotlinx.serialization.json)
+    implementation (libs.ktor.client.content.negotiation)
+    implementation (libs.ktor.client.logging)
+
+
+
+
+
+    implementation (libs.ktor.client.cio)
+    implementation (libs.ktor.client.serialization)
+    // Ktor JSON Serialization
+    // Kotlinx Serialization
     // View model dependency
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-
+    implementation (libs.androidx.hilt.navigation.compose)
+    implementation (libs.hilt.android.v244)
     // Hilt Dagger
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
     // Room
-    val roomVersion = "2.6.1"
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.rxjava2)
-    implementation(libs.androidx.room.rxjava3)
-    implementation(libs.androidx.room.guava)
-    testImplementation(libs.androidx.room.testing)
-    implementation(libs.retrofit)
-    implementation (libs.retrofit.v202)
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-
 
     // Gson
     implementation(libs.gson)

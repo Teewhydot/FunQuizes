@@ -8,12 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.sirteefyapps.funquizes.features.quiz.presentation.screens.ConfigureQuizScreen
-import com.sirteefyapps.funquizes.features.quiz.presentation.screens.QuizScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -34,4 +31,5 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun FunQuizHome(modifier: Modifier = Modifier) {
-FunQuizAppNavigation()}
+FunQuizAppNavigation()
+}

@@ -1,6 +1,5 @@
 package com.sirteefyapps.funquizes.features.quiz.presentation.screens
 
-import AppScreens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,19 +16,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.sirteefyapps.funquizes.features.quiz.presentation.manager.FunQuizViewModel
+import com.sirteefyapps.funquizes.data.data_source.KtorClient
 import com.sirteefyapps.funquizes.features.quiz.presentation.widgets.CustomButton
 import com.sirteefyapps.funquizes.features.quiz.presentation.widgets.DropdownButton
 import com.sirteefyapps.funquizes.ui.theme.AppColors
 import com.sirteefyapps.funquizes.ui.theme.Typography
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
-fun ConfigureQuizScreen(navController: NavController,funQuizViewModel: FunQuizViewModel?) {
+fun ConfigureQuizScreen(navController: NavController,) {
     val selectCategoryOptions = listOf("General Knowledge", "Entertainment: Books", "Entertainment: Film","Entertainment: Music","Entertainment: Music",
         "Entertainment: Musicals & Theatres","Entertainment: Television","Entertainment: Video Games","Entertainment: Board Games","Science & Nature",
         "Science: Computers","Science: Mathematics","Mythology","Sports","Geography","History","Politics","Art","Celebrities","Animals","Vehicles","Entertainment: Comics",
@@ -40,9 +39,7 @@ fun ConfigureQuizScreen(navController: NavController,funQuizViewModel: FunQuizVi
     val selectedCategoryOption = remember { mutableStateOf(selectCategoryOptions[0]) }
     val selectedDifficultyOption = remember { mutableStateOf(selectDifficultyOptions[0]) }
     val selectedQuizTypeOption = remember { mutableStateOf(selectQuizTypeOptions[0]) }
-    val isLoading = funQuizViewModel?.questionList?.value?.isLoading
-
-
+//    val isLoading = funQuizViewModel.questionList.value.isLoading
     Column(
             modifier = Modifier.fillMaxSize().background(color = AppColors.darkPurple),
         ) {
@@ -86,7 +83,6 @@ fun ConfigureQuizScreen(navController: NavController,funQuizViewModel: FunQuizVi
                   text = "Choose Difficulty",
                   style = Typography.bodyMedium,
                   color = AppColors.white,
-
                   )
               Spacer(
                   modifier = Modifier.height(10.dp)
@@ -116,17 +112,10 @@ fun ConfigureQuizScreen(navController: NavController,funQuizViewModel: FunQuizVi
                   modifier = Modifier.height(50.dp)
               )
               CustomButton(modifier = Modifier.align(Alignment.CenterHorizontally), buttonColor = AppColors.brown, onClick = {
-                 val result = funQuizViewModel?.viewModelScope?.launch {
-                     funQuizViewModel.getQuestions(
-                         selectedQuizTypeOption.value,
-                         selectedCategoryOption.value,
-                         selectedDifficultyOption.value
-                     )
-                 }
-                      if(result?.isCompleted ==true)
-                          navController.navigate(AppScreens.QUIZ_SCREEN.name)
-
-              }, text = if(isLoading == true) "Loading..." else "Start Quiz"
+                  kotlinx.coroutines.GlobalScope.launch {
+                     val questions = KtorClient().getFunQuizQuestionsKtorClient()
+                  }
+              }, text =  "Start Quiz"
               )
           }
         }

@@ -2,6 +2,7 @@ package com.sirteefyapps.funquizes.features.quiz.presentation.screens
 
 import android.provider.MediaStore.Audio.Radio
 import android.widget.Space
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,7 +41,10 @@ fun QuizScreen(navController: NavController) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = AppColors.white
+                    tint = AppColors.white,
+                    modifier = Modifier.clickable {
+                        navController.popBackStack()
+                    }
                 )
                 Spacer(
                     modifier = Modifier.width(10.dp)
