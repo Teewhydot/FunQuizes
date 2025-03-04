@@ -20,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +34,7 @@ import com.sirteefyapps.funquizes.ui.theme.Typography
 @Composable
 fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
     val currentQuestionIndex = remember { mutableIntStateOf(0) }
+    val selectedOption = remember { mutableStateOf(false) }
     Surface(modifier = Modifier.fillMaxSize(), color = AppColors.darkPurple) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Row (
@@ -73,8 +75,10 @@ fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
                     modifier = Modifier.height(20.dp)
                 )
                 OptionComposable(
-                    selected = false,
-                    onClick = {},
+                    selected = selectedOption.value,
+                    onClick = {
+                        selectedOption.value = true
+                    },
                     text = quizModelFromConfigure.results[0].correctAnswer
                 )
                 Spacer(
@@ -82,7 +86,7 @@ fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
                 )
                 quizModelFromConfigure.results[0].incorrectAnswers.forEach {
                     OptionComposable(
-                        selected = false,
+                        selected = selectedOption.value,
                         onClick = {},
                         text = it
                     )
@@ -110,10 +114,11 @@ fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
 
 @Composable
 private fun OptionComposable(selected: Boolean = false, onClick: () -> Unit = {}, text: String) {
- Surface(modifier = Modifier.fillMaxWidth().height(50.dp), color = AppColors.lightPurple, shape = RoundedCornerShape(20.dp)) {
+ Surface(modifier = Modifier.fillMaxWidth().height(50.dp), color = if(selected) AppColors.brown else AppColors.lightPurple, shape = RoundedCornerShape(20.dp)) {
      Row(
          horizontalArrangement = Arrangement.Start,
-         verticalAlignment = Alignment.CenterVertically
+         verticalAlignment = Alignment.CenterVertically,
+         modifier = Modifier.clickable { onClick() }
      ) {
          RadioButton(
              selected = selected,
