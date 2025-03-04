@@ -1,6 +1,6 @@
 package com.sirteefyapps.funquizes.features.quiz.presentation.screens
 
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,11 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sirteefyapps.funquizes.data.data_source.KtorClient
+import com.sirteefyapps.funquizes.data.models.QuizModel
 import com.sirteefyapps.funquizes.features.quiz.presentation.widgets.CustomButton
 import com.sirteefyapps.funquizes.features.quiz.presentation.widgets.DropdownButton
 import com.sirteefyapps.funquizes.ui.theme.AppColors
@@ -30,6 +33,8 @@ import kotlinx.coroutines.launch
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun ConfigureQuizScreen(navController: NavController,) {
+        val context  = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     /// Selected category as a map where each category has a corresponding integer value
     val pickCategoryOptions = mapOf(
         "General Knowledge" to 9,
@@ -62,7 +67,36 @@ fun ConfigureQuizScreen(navController: NavController,) {
     val selectedCategoryOption = remember { mutableStateOf(pickCategoryOptions.keys.first()) }
     val selectedDifficultyOption = remember { mutableStateOf(selectDifficultyOptions[0]) }
     val selectedQuizTypeOption = remember { mutableStateOf(selectQuizTypeOptions[0]) }
-//    val isLoading = funQuizViewModel.questionList.value.isLoading
+    var quizResult: QuizModel
+
+    // Function to fetch quiz questions and handle the result
+    fun fetchQuizQuestions() {
+        coroutineScope.launch {
+            try {
+                // Call the suspending function and await the result
+                 quizResult = KtorClient().getFunQuizQuestionsKtorClient(
+                    amount = 10,
+                    category = pickCategoryOptions[selectedCategoryOption.value]!!,
+                    difficulty = selectedDifficultyOption.value,
+                    type = selectedQuizTypeOption.value
+                )
+                // Check if the result is empty
+                if (quizResult.results.isEmpty()) {
+                    // Show a toast if the result is empty
+                    Toast.makeText(context, "No questions found!", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Navigate to QuizScreen with the result
+                    navController.navigate("quizScreen/${quizResult}")
+                }
+            } catch (e: Exception) {
+                // Handle any errors (e.g., network issues)
+                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+
     Column(
             modifier = Modifier.fillMaxSize().background(color = AppColors.darkPurple),
         ) {
@@ -135,17 +169,17 @@ fun ConfigureQuizScreen(navController: NavController,) {
                   modifier = Modifier.height(50.dp)
               )
               CustomButton(modifier = Modifier.align(Alignment.CenterHorizontally), buttonColor = AppColors.brown, onClick = {
-                  kotlinx.coroutines.GlobalScope.launch {
-                      Log.d("Selected Category index", pickCategoryOptions[selectedCategoryOption.value]!!.toString())
-                     val questions = KtorClient().getFunQuizQuestionsKtorClient(
-                            amount = 10,
-                            category = pickCategoryOptions[selectedCategoryOption.value]!!,
-                            difficulty = selectedDifficultyOption.value,
-                            type = selectedQuizTypeOption.value
-                     )
-
-                      Log.d("Questions", questions.results.toString())
-                  }
+//                  kotlinx.coroutines.GlobalScope.launch {
+//                      Log.d("Selected Category index", pickCategoryOptions[selectedCategoryOption.value]!!.toString())
+//                     val questions = KtorClient().getFunQuizQuestionsKtorClient(
+//                            amount = 10,
+//                            category = pickCategoryOptions[selectedCategoryOption.value]!!,
+//                            difficulty = selectedDifficultyOption.value,
+//                            type = selectedQuizTypeOption.value
+//                     )
+//
+//                      Log.d("Questions", questions.results.toString())
+//                  }
               }, text =  "Start Quiz"
               )
           }
