@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,8 +35,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
-fun ConfigureQuizScreen(navController: NavController,) {
-        val context  = LocalContext.current
+fun ConfigureQuizScreen(navController: NavController) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     /// Selected category as a map where each category has a corresponding integer value
     val pickCategoryOptions = mapOf(
@@ -74,7 +77,7 @@ fun ConfigureQuizScreen(navController: NavController,) {
         coroutineScope.launch {
             try {
                 // Call the suspending function and await the result
-                 quizResult = KtorClient().getFunQuizQuestionsKtorClient(
+                quizResult = KtorClient().getFunQuizQuestionsKtorClient(
                     amount = 10,
                     category = pickCategoryOptions[selectedCategoryOption.value]!!,
                     difficulty = selectedDifficultyOption.value,
@@ -98,90 +101,91 @@ fun ConfigureQuizScreen(navController: NavController,) {
 
 
     Column(
-            modifier = Modifier.fillMaxSize().background(color = AppColors.darkPurple),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = AppColors.darkPurple)
+            .windowInsetsPadding(WindowInsets.safeContent),
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp),
+            color = AppColors.lightPurple
         ) {
-            Surface(
-                modifier = Modifier.fillMaxWidth().height(60.dp),
-                color = AppColors.lightPurple
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-               Row (
-                   modifier = Modifier.fillMaxWidth(),
-                     horizontalArrangement = Arrangement.Center,
-                   verticalAlignment = Alignment.CenterVertically
-               ){
-                   Text(
-                       text = "Configure Quiz",
-                       style = Typography.headlineMedium,
-                       color = AppColors.white,
-                   )
-               }
-            }
-          Column(modifier = Modifier.padding(16.dp)) {
-              Spacer(
-                  modifier = Modifier.height(20.dp)
-              )
-              Text(
-                  text = "Choose Quiz Category",
-                  style = Typography.bodyMedium,
-                  color = AppColors.white,
-
-              )
-              Spacer(
-                  modifier = Modifier.height(10.dp)
-              )
-                DropdownButton(
-                    options = pickCategoryOptions.keys.toList(),
-                    selectedOption = selectedCategoryOption.value,
-                    onOptionSelected = { selectedCategoryOption.value = it }
+                Text(
+                    text = "Configure Quiz",
+                    style = Typography.headlineMedium,
+                    color = AppColors.white,
                 )
-                Spacer(
-                    modifier = Modifier.height(20.dp))
-              Text(
-                  text = "Choose Difficulty",
-                  style = Typography.bodyMedium,
-                  color = AppColors.white,
-                  )
-              Spacer(
-                  modifier = Modifier.height(10.dp)
-              )
-              DropdownButton(
-                  options = selectDifficultyOptions,
-                  selectedOption = selectedDifficultyOption.value,
-                  onOptionSelected = { selectedDifficultyOption.value = it }
-              )
-              Spacer(
-                  modifier = Modifier.height(20.dp))
-              Text(
-                  text = "Choose Quiz Mode",
-                  style = Typography.bodyMedium,
-                  color = AppColors.white,
-
-                  )
-              Spacer(
-                  modifier = Modifier.height(10.dp)
-              )
-              DropdownButton(
-                  options = selectQuizTypeOptions,
-                  selectedOption = selectedQuizTypeOption.value,
-                  onOptionSelected = { selectedQuizTypeOption.value = it }
-              )
-              Spacer(
-                  modifier = Modifier.height(50.dp)
-              )
-              CustomButton(modifier = Modifier.align(Alignment.CenterHorizontally), buttonColor = AppColors.brown, onClick = {
-//                  kotlinx.coroutines.GlobalScope.launch {
-//                      Log.d("Selected Category index", pickCategoryOptions[selectedCategoryOption.value]!!.toString())
-//                     val questions = KtorClient().getFunQuizQuestionsKtorClient(
-//                            amount = 10,
-//                            category = pickCategoryOptions[selectedCategoryOption.value]!!,
-//                            difficulty = selectedDifficultyOption.value,
-//                            type = selectedQuizTypeOption.value
-//                     )
-//
-//                      Log.d("Questions", questions.results.toString())
-//                  }
-              }, text =  "Start Quiz"
-              )
-          }
+            }
         }
+        Column(modifier = Modifier.padding(16.dp)) {
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
+            Text(
+                text = "Choose Quiz Category",
+                style = Typography.bodyMedium,
+                color = AppColors.white,
+
+                )
+            Spacer(
+                modifier = Modifier.height(10.dp)
+            )
+            DropdownButton(
+                options = pickCategoryOptions.keys.toList(),
+                selectedOption = selectedCategoryOption.value,
+                onOptionSelected = { selectedCategoryOption.value = it }
+            )
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
+            Text(
+                text = "Choose Difficulty",
+                style = Typography.bodyMedium,
+                color = AppColors.white,
+            )
+            Spacer(
+                modifier = Modifier.height(10.dp)
+            )
+            DropdownButton(
+                options = selectDifficultyOptions,
+                selectedOption = selectedDifficultyOption.value,
+                onOptionSelected = { selectedDifficultyOption.value = it }
+            )
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
+            Text(
+                text = "Choose Quiz Mode",
+                style = Typography.bodyMedium,
+                color = AppColors.white,
+
+                )
+            Spacer(
+                modifier = Modifier.height(10.dp)
+            )
+            DropdownButton(
+                options = selectQuizTypeOptions,
+                selectedOption = selectedQuizTypeOption.value,
+                onOptionSelected = { selectedQuizTypeOption.value = it }
+            )
+            Spacer(
+                modifier = Modifier.height(50.dp)
+            )
+            CustomButton(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                buttonColor = AppColors.brown,
+                onClick = {
+                    fetchQuizQuestions()
+                },
+                text = "Start Quiz"
+            )
+        }
+    }
 }
