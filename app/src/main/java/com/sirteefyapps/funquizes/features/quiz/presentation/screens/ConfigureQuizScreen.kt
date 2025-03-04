@@ -73,11 +73,13 @@ fun ConfigureQuizScreen(navController: NavController) {
     val selectedDifficultyOption = remember { mutableStateOf(selectDifficultyOptions[0]) }
     val selectedQuizTypeOption = remember { mutableStateOf(selectQuizTypeOptions[0]) }
     var questionsFromApi: QuizModel
+    val isLoading = remember { mutableStateOf(false) }
 
     // Function to fetch quiz questions and handle the result
     fun fetchQuizQuestions() {
         coroutineScope.launch {
             try {
+                isLoading.value = true
                 // Call the suspending function and await the result
                 questionsFromApi = KtorClient().getFunQuizQuestionsKtorClient(
                     amount = 10,
@@ -88,15 +90,18 @@ fun ConfigureQuizScreen(navController: NavController) {
                 // Check if the result is empty
                 if (questionsFromApi.results.isEmpty()) {
                     // Show a toast if the result is empty
+                    isLoading.value = false
                     Toast.makeText(context, "No questions found!", Toast.LENGTH_SHORT).show()
                 } else {
                     // Navigate to QuizScreen with the result
+                    isLoading.value = false
                     navController.navigate(Screens.Quiz(
                             quizModel = questionsFromApi)
                     )
                 }
             } catch (e: Exception) {
                 // Handle any errors (e.g., network issues)
+                isLoading.value = false
                 Log.e("ConfigureQuizScreen", "Error: ${e.message}")
                 Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
             }
@@ -105,7 +110,7 @@ fun ConfigureQuizScreen(navController: NavController) {
 
 
 
-    Column(
+   if(!isLoading.value) Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = AppColors.darkPurple)
@@ -190,6 +195,22 @@ fun ConfigureQuizScreen(navController: NavController) {
                     fetchQuizQuestions()
                 },
                 text = "Start Quiz"
+            )
+        }
+    }
+    else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = AppColors.darkPurple)
+                .windowInsetsPadding(WindowInsets.safeContent),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Loading...",
+                style = Typography.bodyMedium,
+                color = AppColors.white
             )
         }
     }

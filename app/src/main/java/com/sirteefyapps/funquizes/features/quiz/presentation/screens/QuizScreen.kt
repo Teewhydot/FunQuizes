@@ -19,6 +19,8 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -30,6 +32,7 @@ import com.sirteefyapps.funquizes.ui.theme.Typography
 
 @Composable
 fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
+    val currentQuestionIndex = remember { mutableIntStateOf(0) }
     Surface(modifier = Modifier.fillMaxSize(), color = AppColors.darkPurple) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Row (
@@ -66,26 +69,27 @@ fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
                )
            }
           Column {
-              OptionComposable(
-                  selected = true,
-                  text = "Maybe"
-              )
-              Spacer(
-                  modifier = Modifier.height(10.dp)
-              )
-              OptionComposable(
-                  text = "Read Quran",
-                  onClick = {}
-                  , selected = false
-              )
-              Spacer(
-                  modifier = Modifier.height(10.dp)
-              )
-              OptionComposable(
-                  text = "Pray",
-                  onClick = {}
-                  , selected = false
-              )
+                Spacer(
+                    modifier = Modifier.height(20.dp)
+                )
+                OptionComposable(
+                    selected = false,
+                    onClick = {},
+                    text = quizModelFromConfigure.results[0].correctAnswer
+                )
+                Spacer(
+                    modifier = Modifier.height(20.dp)
+                )
+                quizModelFromConfigure.results[0].incorrectAnswers.forEach {
+                    OptionComposable(
+                        selected = false,
+                        onClick = {},
+                        text = it
+                    )
+                    Spacer(
+                        modifier = Modifier.height(20.dp)
+                    )
+                }
           }
             Spacer(
                 modifier = Modifier.height(20.dp)
