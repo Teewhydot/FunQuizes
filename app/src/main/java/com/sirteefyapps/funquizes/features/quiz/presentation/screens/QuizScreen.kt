@@ -23,12 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.sirteefyapps.funquizes.data.models.QuizModel
 import com.sirteefyapps.funquizes.features.quiz.presentation.widgets.CustomButton
 import com.sirteefyapps.funquizes.ui.theme.AppColors
 import com.sirteefyapps.funquizes.ui.theme.Typography
 
 @Composable
-fun QuizScreen(navController: NavController) {
+fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
     Surface(modifier = Modifier.fillMaxSize(), color = AppColors.darkPurple) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Row (
@@ -59,7 +60,7 @@ fun QuizScreen(navController: NavController) {
                    modifier = Modifier.height(40.dp)
                )
                Text(
-                   text = "How this ramadan go be, na to dey sleep all day?",
+                   text = quizModelFromConfigure.results[0].question,
                    color = AppColors.white
 
                )
@@ -99,6 +100,9 @@ fun QuizScreen(navController: NavController) {
     }
 
 }
+
+
+
 
 @Composable
 private fun OptionComposable(selected: Boolean = false, onClick: () -> Unit = {}, text: String) {

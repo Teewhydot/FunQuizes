@@ -2,14 +2,15 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.seriazliation)
+    id("kotlin-parcelize")
     id ("kotlin-kapt")
     id ("com.google.dagger.hilt.android")
     id ("com.google.devtools.ksp")
-    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
-    namespace = "com.sirteefyapps.funquizes"
+    namespace  = "com.sirteefyapps.funquizes"
     compileSdk = 35
 
     defaultConfig {
@@ -53,7 +54,8 @@ dependencies {
     implementation (libs.ktor.client.logging)
 
 
-
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 
 
     implementation (libs.ktor.client.cio)
@@ -63,7 +65,6 @@ dependencies {
     // View model dependency
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.hilt.navigation.compose)
-    implementation (libs.hilt.android.v244)
     // Hilt Dagger
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
@@ -81,8 +82,7 @@ dependencies {
 
     //Navigation
     implementation(libs.androidx.navigation.compose)
-
-
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

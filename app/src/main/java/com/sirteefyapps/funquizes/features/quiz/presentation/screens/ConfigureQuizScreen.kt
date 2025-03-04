@@ -1,5 +1,7 @@
 package com.sirteefyapps.funquizes.features.quiz.presentation.screens
 
+import Screens
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -70,30 +72,33 @@ fun ConfigureQuizScreen(navController: NavController) {
     val selectedCategoryOption = remember { mutableStateOf(pickCategoryOptions.keys.first()) }
     val selectedDifficultyOption = remember { mutableStateOf(selectDifficultyOptions[0]) }
     val selectedQuizTypeOption = remember { mutableStateOf(selectQuizTypeOptions[0]) }
-    var quizResult: QuizModel
+    var questionsFromApi: QuizModel
 
     // Function to fetch quiz questions and handle the result
     fun fetchQuizQuestions() {
         coroutineScope.launch {
             try {
                 // Call the suspending function and await the result
-                quizResult = KtorClient().getFunQuizQuestionsKtorClient(
+                questionsFromApi = KtorClient().getFunQuizQuestionsKtorClient(
                     amount = 10,
                     category = pickCategoryOptions[selectedCategoryOption.value]!!,
                     difficulty = selectedDifficultyOption.value,
                     type = selectedQuizTypeOption.value
                 )
                 // Check if the result is empty
-                if (quizResult.results.isEmpty()) {
+                if (questionsFromApi.results.isEmpty()) {
                     // Show a toast if the result is empty
                     Toast.makeText(context, "No questions found!", Toast.LENGTH_SHORT).show()
                 } else {
                     // Navigate to QuizScreen with the result
-                    navController.navigate("quizScreen/${quizResult}")
+                    navController.navigate(Screens.Quiz(
+                            quizModel = questionsFromApi)
+                    )
                 }
             } catch (e: Exception) {
                 // Handle any errors (e.g., network issues)
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e("ConfigureQuizScreen", "Error: ${e.message}")
+                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }

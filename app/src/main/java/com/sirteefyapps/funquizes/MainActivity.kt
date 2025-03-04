@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -20,6 +20,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
+
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 FunQuizHome(
                     modifier = Modifier.padding(innerPadding)
@@ -28,8 +30,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-@Preview(showBackground = true)
 @Composable
 fun FunQuizHome(modifier: Modifier = Modifier) {
-FunQuizAppNavigation()
+    val navController = rememberNavController()
+    FunQuizAppNavigation(
+        navController = navController
+    )
 }
