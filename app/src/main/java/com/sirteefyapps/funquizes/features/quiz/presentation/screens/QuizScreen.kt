@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sirteefyapps.funquizes.data.models.QuizModel
@@ -35,6 +36,20 @@ import com.sirteefyapps.funquizes.ui.theme.Typography
 fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
     val currentQuestionIndex = remember { mutableIntStateOf(0) }
     val selectedOption = remember { mutableStateOf(false) }
+    var currentQuestion = remember {
+        quizModelFromConfigure.results[currentQuestionIndex.intValue]
+    }
+    val questionOptions = remember {
+       if(currentQuestion.type == "boolean") mutableListOf(
+              "True",
+              "False"
+         ) else mutableListOf(
+              currentQuestion.correctAnswer,
+              currentQuestion.incorrectAnswers[0],
+              currentQuestion.incorrectAnswers[1],
+              currentQuestion.incorrectAnswers[2]
+       )
+    }
     Surface(modifier = Modifier.fillMaxSize(), color = AppColors.darkPurple) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Row (
@@ -65,7 +80,7 @@ fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
                    modifier = Modifier.height(40.dp)
                )
                Text(
-                   text = quizModelFromConfigure.results[0].question,
+                   text = quizModelFromConfigure.results[currentQuestionIndex.intValue].question,
                    color = AppColors.white
 
                )
@@ -74,21 +89,12 @@ fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
                 Spacer(
                     modifier = Modifier.height(20.dp)
                 )
-                OptionComposable(
-                    selected = selectedOption.value,
-                    onClick = {
-                        selectedOption.value = true
-                    },
-                    text = quizModelFromConfigure.results[0].correctAnswer
-                )
-                Spacer(
-                    modifier = Modifier.height(20.dp)
-                )
-                quizModelFromConfigure.results[0].incorrectAnswers.forEach {
+                questionOptions.shuffled().forEach {
                     OptionComposable(
                         selected = selectedOption.value,
                         onClick = {},
-                        text = it
+                        text = it,
+                        buttonColor = AppColors.lightPurple
                     )
                     Spacer(
                         modifier = Modifier.height(20.dp)
@@ -101,7 +107,10 @@ fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
             CustomButton(
                buttonColor = AppColors.brown,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = {},
+                onClick = {
+                    currentQuestionIndex.intValue++
+                    currentQuestion = quizModelFromConfigure.results[currentQuestionIndex.intValue]
+                },
                 text = "Check Answer"
             )
         }
@@ -113,8 +122,8 @@ fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
 
 
 @Composable
-private fun OptionComposable(selected: Boolean = false, onClick: () -> Unit = {}, text: String) {
- Surface(modifier = Modifier.fillMaxWidth().height(50.dp), color = if(selected) AppColors.brown else AppColors.lightPurple, shape = RoundedCornerShape(20.dp)) {
+private fun OptionComposable(selected: Boolean = false,buttonColor:Color, onClick: () -> Unit = {}, text: String) {
+ Surface(modifier = Modifier.fillMaxWidth().height(50.dp), color = buttonColor, shape = RoundedCornerShape(20.dp)) {
      Row(
          horizontalArrangement = Arrangement.Start,
          verticalAlignment = Alignment.CenterVertically,
