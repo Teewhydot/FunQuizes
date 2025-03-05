@@ -5,12 +5,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,7 +22,9 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,29 +38,37 @@ import com.sirteefyapps.funquizes.ui.theme.AppColors
 import com.sirteefyapps.funquizes.ui.theme.Typography
 
 @Composable
-fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
+fun QuizScreen(quizModelFromConfigure: QuizModel, navController: NavController) {
     val currentQuestionIndex = remember { mutableIntStateOf(0) }
     val selectedOption = remember { mutableStateOf(false) }
-    var currentQuestion = remember {
+    val userHasChosen = remember { mutableStateOf(false) }
+    val selectedOptionIndex = remember { mutableIntStateOf(-1) } // -1 means no option selected
+
+    val currentQuestion = remember {
         quizModelFromConfigure.results[currentQuestionIndex.intValue]
     }
-    val questionOptions = remember {
-       if(currentQuestion.type == "boolean") mutableListOf(
-              "True",
-              "False"
-         ) else mutableListOf(
-              currentQuestion.correctAnswer,
-              currentQuestion.incorrectAnswers[0],
-              currentQuestion.incorrectAnswers[1],
-              currentQuestion.incorrectAnswers[2]
-       )
+    var questionOptions = remember {
+        if (currentQuestion.type == "boolean") listOf(
+            "True",
+            "False"
+        ) else listOf(
+            quizModelFromConfigure.results[currentQuestionIndex.intValue].correctAnswer,
+            quizModelFromConfigure.results[currentQuestionIndex.intValue].incorrectAnswers[0],
+            quizModelFromConfigure.results[currentQuestionIndex.intValue].incorrectAnswers[1],
+            quizModelFromConfigure.results[currentQuestionIndex.intValue].incorrectAnswers[2],
+        )
     }
     Surface(modifier = Modifier.fillMaxSize(), color = AppColors.darkPurple) {
-        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            Row (
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp)
+                .windowInsetsPadding(WindowInsets.safeContent)
+        ) {
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
@@ -68,81 +81,121 @@ fun QuizScreen(quizModelFromConfigure: QuizModel,navController: NavController) {
                     modifier = Modifier.width(10.dp)
                 )
                 Text(
-                    text = "Configure Quiz",
+                    text = "Score: 0",
                     style = Typography.headlineSmall,
                     color = AppColors.white,
                 )
             }
-           Column(modifier = Modifier.padding(16.dp).fillMaxWidth().fillMaxHeight(
-                0.3f
-           )) {
-               Spacer(
-                   modifier = Modifier.height(40.dp)
-               )
-               Text(
-                   text = quizModelFromConfigure.results[currentQuestionIndex.intValue].question,
-                   color = AppColors.white
-
-               )
-           }
-          Column {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .fillMaxHeight(
+                        0.3f
+                    )
+            ) {
                 Spacer(
-                    modifier = Modifier.height(20.dp)
+                    modifier = Modifier.height(40.dp)
                 )
-                questionOptions.shuffled().forEach {
-                    OptionComposable(
-                        selected = selectedOption.value,
-                        onClick = {},
-                        text = it,
-                        buttonColor = AppColors.lightPurple
-                    )
-                    Spacer(
-                        modifier = Modifier.height(20.dp)
-                    )
+                Text(
+                    text = quizModelFromConfigure.results[currentQuestionIndex.intValue].question,
+                    color = AppColors.white
+
+                )
+            }
+            if (quizModelFromConfigure.results[currentQuestionIndex.intValue].type == "multiple") OptionsComposable(
+                optionsList = listOf(
+                    quizModelFromConfigure.results[currentQuestionIndex.intValue].correctAnswer,
+                    quizModelFromConfigure.results[currentQuestionIndex.intValue].incorrectAnswers[0],
+                    quizModelFromConfigure.results[currentQuestionIndex.intValue].incorrectAnswers[1],
+                    quizModelFromConfigure.results[currentQuestionIndex.intValue].incorrectAnswers[2]
+                ),
+                answer = quizModelFromConfigure.results[currentQuestionIndex.intValue].correctAnswer,
+                selectedOptionIndex = selectedOptionIndex,
+
+                onClick = {
                 }
-          }
+            ) else {
+                OptionsComposable(
+                    selectedOptionIndex = selectedOptionIndex,
+
+                    optionsList = listOf(
+                        quizModelFromConfigure.results[currentQuestionIndex.intValue].correctAnswer,
+                        quizModelFromConfigure.results[currentQuestionIndex.intValue].incorrectAnswers[0],
+                    ),
+                    answer = quizModelFromConfigure.results[currentQuestionIndex.intValue].correctAnswer,
+                    onClick = {
+                    }
+                )
+            }
             Spacer(
                 modifier = Modifier.height(20.dp)
             )
-            CustomButton(
-               buttonColor = AppColors.brown,
+          if(!userHasChosen.value)   CustomButton(
+                buttonColor = AppColors.brown,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 onClick = {
-                    currentQuestionIndex.intValue++
-                    currentQuestion = quizModelFromConfigure.results[currentQuestionIndex.intValue]
+                    // Check answer
+                    userHasChosen.value = true
                 },
                 text = "Check Answer"
+            ) else
+            CustomButton(
+                buttonColor = AppColors.brown,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onClick = {
+                   currentQuestionIndex.intValue++
+                    selectedOptionIndex.intValue = -1 // Reset selected option
+
+                },
+                text = "Next"
             )
         }
     }
 
 }
 
-
-
-
 @Composable
-private fun OptionComposable(selected: Boolean = false,buttonColor:Color, onClick: () -> Unit = {}, text: String) {
- Surface(modifier = Modifier.fillMaxWidth().height(50.dp), color = buttonColor, shape = RoundedCornerShape(20.dp)) {
-     Row(
-         horizontalArrangement = Arrangement.Start,
-         verticalAlignment = Alignment.CenterVertically,
-         modifier = Modifier.clickable { onClick() }
-     ) {
-         RadioButton(
-             selected = selected,
-             onClick = {
-                    onClick()
-             },
-             modifier = Modifier.padding(16.dp)
-         )
-         Spacer(
-             modifier = Modifier.width(10.dp)
-         )
-         Text(
-             text = text,
-             color = AppColors.white
-         )
-     }
- }
+private fun OptionsComposable(
+    optionsList: List<String>,
+    answer: String,
+    selectedOptionIndex: MutableState<Int>,
+    onClick: () -> Unit = {},
+) {
+    val buttonColors = remember { mutableStateMapOf<Int, Color>() }
+
+    optionsList.forEachIndexed { index, option ->
+        Column {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                color = buttonColors[index] ?: AppColors.lightPurple,
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .clickable {
+                            selectedOptionIndex.value = index
+                            onClick()
+                        }
+                        .padding(10.dp)
+                ) {
+                    RadioButton(
+                        selected = selectedOptionIndex.value == index,
+                        onClick = { selectedOptionIndex.value = index },
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = option,
+                        color = AppColors.white
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+    }
 }
