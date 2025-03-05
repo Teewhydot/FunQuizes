@@ -144,7 +144,7 @@ fun QuizScreen(quizModelFromConfigure: QuizModel, navController: NavController) 
                     buttonColor = AppColors.brown,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = {
-                      if(currentQuestionIndex.intValue < questionOptions.size){
+                      if(currentQuestionIndex.intValue < quizModelFromConfigure.results.size){
                           currentQuestionIndex.intValue++
                       } else  {
                           Toast.makeText(context, "End of questions list!", Toast.LENGTH_SHORT).show()
