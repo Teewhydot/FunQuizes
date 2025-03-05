@@ -32,10 +32,8 @@ import com.sirteefyapps.funquizes.features.quiz.presentation.widgets.CustomButto
 import com.sirteefyapps.funquizes.features.quiz.presentation.widgets.DropdownButton
 import com.sirteefyapps.funquizes.ui.theme.AppColors
 import com.sirteefyapps.funquizes.ui.theme.Typography
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
 
-@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun ConfigureQuizScreen(navController: NavController) {
     val context = LocalContext.current
@@ -82,7 +80,7 @@ fun ConfigureQuizScreen(navController: NavController) {
                 isLoading.value = true
                 // Call the suspending function and await the result
                 questionsFromApi = KtorClient().getFunQuizQuestionsKtorClient(
-                    amount = 10,
+                    amount = 50,
                     category = pickCategoryOptions[selectedCategoryOption.value]!!,
                     difficulty = selectedDifficultyOption.value,
                     type = selectedQuizTypeOption.value
@@ -120,7 +118,7 @@ fun ConfigureQuizScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp),
-            color = AppColors.lightPurple
+            color = AppColors.darkPurple
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

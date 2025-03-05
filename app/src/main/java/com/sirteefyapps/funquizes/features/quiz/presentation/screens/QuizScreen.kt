@@ -24,10 +24,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,11 +44,11 @@ import com.sirteefyapps.funquizes.ui.theme.Typography
 @Composable
 fun QuizScreen(quizModelFromConfigure: QuizModel, navController: NavController) {
     val currentQuestionIndex = remember { mutableIntStateOf(0) }
-    val selectedOption = remember { mutableStateOf(false) }
     val userChecksAnswer = remember { mutableStateOf(false) }
     val userHasChosen = remember { mutableStateOf(false) }
     val selectedOptionIndex = remember { mutableIntStateOf(-1) } // -1 means no option selected
     val context = LocalContext.current
+    var scoreCount by remember { mutableIntStateOf(0) }
 
     val currentQuestion = remember (currentQuestionIndex.intValue){
         quizModelFromConfigure.results[currentQuestionIndex.intValue]
@@ -85,7 +87,7 @@ fun QuizScreen(quizModelFromConfigure: QuizModel, navController: NavController) 
                     modifier = Modifier.width(10.dp)
                 )
                 Text(
-                    text = "Score: 0",
+                    text = "Progress: ${currentQuestionIndex.intValue + 1} / ${quizModelFromConfigure.results.size}",
                     style = Typography.headlineSmall,
                     color = AppColors.white,
                 )
